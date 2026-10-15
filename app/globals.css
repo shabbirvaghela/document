@@ -1,3 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .tiptap {
+    @apply min-h-[60vh] outline-none text-base leading-7 text-gray-900;
+  }
+
+  .tiptap > * + * {
+    @apply mt-4;
+  }
+
+  .tiptap h1 {
+    @apply text-3xl font-bold leading-tight;
+  }
+
+  .tiptap h2 {
+    @apply text-2xl font-bold leading-tight;
+  }
+
+  .tiptap h3 {
+    @apply text-xl font-semibold leading-tight;
+  }
+
+  .tiptap ul {
+    @apply list-disc pl-6;
+  }
+
+  .tiptap ol {
+    @apply list-decimal pl-6;
+  }
+
+  .tiptap li > p {
+    @apply my-0;
+  }
+
+  .tiptap blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic text-gray-600;
+  }
+
+  .tiptap pre {
+    @apply overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm text-gray-100;
+  }
+
+  .tiptap code {
+    @apply rounded bg-gray-100 px-1 py-0.5 text-sm;
+  }
+
+  .tiptap pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .tiptap hr {
+    @apply border-gray-300;
+  }
+}

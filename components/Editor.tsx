@@ -24,7 +24,7 @@ export default function Editor({ content, editable, onChange }: Props) {
   return (
     <div className="bg-white border rounded-xl shadow-sm">
       {editable && <EditorToolbar editor={editor} />}
-      <EditorContent editor={editor} className="px-10 py-8" />
+      <EditorContent editor={editor} className="px-10 py-8 tiptap" />
     </div>
   );
 }

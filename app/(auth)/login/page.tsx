@@ -16,29 +16,44 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setMessage(null);
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
       setError(parsed.error.issues[0].message);
       return;
     }
     setLoading(true);
-    const supabase = createClient();
-    const { error } =
-      mode === "signin"
-        ? await supabase.auth.signInWithPassword(parsed.data)
-        : await supabase.auth.signUp(parsed.data);
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-      return;
+    try {
+      const supabase = createClient();
+      const result =
+        mode === "signin"
+          ? await supabase.auth.signInWithPassword(parsed.data)
+          : await supabase.auth.signUp(parsed.data);
+
+      if (result.error) {
+        setError(result.error.message);
+        return;
+      }
+
+      if (mode === "signup" && !result.data.session) {
+        setMessage("Check your email to confirm your account, then sign in.");
+        setMode("signin");
+        return;
+      }
+
+      router.push("/documents");
+      router.refresh();
+    } catch {
+      setError("Could not connect to the authentication service. Check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-    router.push("/documents");
-    router.refresh();
   }
 
   return (
@@ -74,6 +89,11 @@ export default function LoginPage() {
               {error}
             </p>
           )}
+          {message && (
+            <p role="status" className="text-sm text-green-700">
+              {message}
+            </p>
+          )}
           <button
             disabled={loading}
             className="w-full bg-blue-600 text-white rounded-lg py-2 font-medium disabled:opacity-60"
@@ -89,6 +109,7 @@ export default function LoginPage() {
             onClick={() => {
               setMode(mode === "signin" ? "signup" : "signin");
               setError(null);
+              setMessage(null);
             }}
             className="w-full text-sm text-blue-600"
           >
@@ -97,17 +118,6 @@ export default function LoginPage() {
               : "Have an account? Sign in"}
           </button>
         </form>
-
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-900">
-          <p className="font-medium mb-1">
-            Demo accounts (password: Test1234!)
-          </p>
-          <ul className="list-disc ml-5">
-            <li>alice@test.com</li>
-            <li>bob@test.com</li>
-            <li>carol@test.com</li>
-          </ul>
-        </div>
       </div>
     </main>
   );

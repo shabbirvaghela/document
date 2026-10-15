@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import DocumentCard from "@/components/DocumentCard";
 import NewDocumentButton from "@/components/NewDocumentButton";
+import ImportButton from "@/components/ImportButton";
 
 type SharedRow = {
   role: "viewer" | "editor";
@@ -40,7 +41,15 @@ export default async function DocumentsPage() {
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Documents</h1>
-        <NewDocumentButton />
+        <div className="">
+          <div className="flex gap-4">
+            <NewDocumentButton />
+            <ImportButton />
+          </div>
+          <p className="text-xs text-gray-500 mt-1 text-right">
+            Supported: .txt, .md, .docx (max 5 MB)
+          </p>
+        </div>
         {/* Phase 4: <ImportButton /> goes here */}
       </div>
 
